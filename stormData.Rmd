@@ -24,13 +24,10 @@ Basically, we want to answer explore and answer two questions:
    economic consequences?
 
 ### Basic settings & libraries
-For this analysis we want to avoid scientific notation it is not helpful 
-in visualization or user friendly when reporting the impacts of weather
-related events to the public
 
 ```{r}
 echo = TRUE
-options(scipen = 1) 
+#options(scipen = 1) 
 library(R.utils)
 library(ggplot2)
 library(plyr)
@@ -51,10 +48,9 @@ head(stormData)
 There are 902,297 observations in the dataset
 
 The description of the data states that events in the database start in the 
-year 1950 and end in November 2011. It goes on to state, In the earlier 
-years of the database there are generally fewer events recorded, most likely 
-due to a lack of good records. More recent years should be considered more 
-complete. We plot a simple histogram to visualize this.
+year 1950 and end in November 2011. It goes on to suggest that earlier years 
+recorded in the database are not ideal for our analysis. More recent years 
+should be considered. We plot a simple histogram to visualize this.
 
 ```{r}
 stormData$year <- as.numeric(format(as.Date(stormData$BGN_DATE, 
@@ -62,13 +58,13 @@ stormData$year <- as.numeric(format(as.Date(stormData$BGN_DATE,
 hist(stormData$year, breaks=30, col="blue")
 ```  
 
-Based on the above histogram, we see that the number of events tracked starts to 
-significantly increase around 1995. So, we subset the data from 1990 to 2011 to 
+Based on the histogram above, we see that the number of events tracked starts to 
+significantly increase around 1995. So, we subset the data from 1995 to 2011 to 
 leverage more complete records for our analysis.
 
 ```{r}
 stormData <- stormData[stormData$year >= 1995, ]
-dim(storm)
+dim(stormData)
 ```
 Now there are 681,500 observations in the dataset
 In addition, not all variables are needed in the analysis, we will now remove
@@ -87,22 +83,12 @@ data quality issues we might encounter there.
 
 ```{r}
 summary(stormData$PROPDMGEXP)
-```
-
--      ?      +      0      1      2      3      4      5      6      7      8 
-294516      1      5      4    187     25     13      4      3     26      3      5      1 
-B      h      H      K      m      M 
-37      0      6 378706      6   7952 
-
-```{r}
 summary(stormData$CROPDMGEXP)
 ```
-?      0      2      B      k      K      m      M 
-400088      5      8      1      7      3 279483      1   1904
 
 Here we see some data quality issues with both PROPDMGEXP & CROPDMGEXP variables.
 Namely, ?, +, 1, 0-8 and ?, 0, 2 for PROPDMGEXP & CROPDMGEXP, respectively.
-We do not know what these mean. In addition, $ value units are mixed case in
+We do not know what these mean. In addition, the units are mixed case in
 some instances.
 
 First, we uppercase the valid exponents
@@ -138,7 +124,7 @@ stormData$TOTALCROPDMG<-stormData$CROPDMGEXP*stormData$CROPDMG
 head(stormData)
 ```
 
-As a last data tidying step, we total the ***fatalities**, **injuries**, 
+As a last data tidying step, we total the **fatalities**, **injuries**, 
 **property damages**, **crop damages**, and **total damages** by event type
 ```{r}
 totalStormImpact<-ddply(stormData, .(EVTYPE), summarize,
@@ -151,10 +137,10 @@ totalStormImpact<-ddply(stormData, .(EVTYPE), summarize,
 stormData is now a tidy dataset ready for analysis
 
 ### Results
-### Impact on Public Health
+#### Impact on Public Health
 There are 985 levels of EVTYPE. Since we are only interested in weather events 
 with the most impact on **fatalities** and **injuries**, we will consider only
-the top 10.
+the top 10 events.
 
 ```{r}
 fatalities<-totalStormImpact[ order(-totalStormImpact[, 2]), ][1:10, ]
@@ -187,10 +173,9 @@ According to the graph above, **excessive heat** is the leading cause of
 **fatalities** and **tornados** are the leading cause of **injuries** - 
 according to data collected by the NOAA from 1995-2011
 
-### Impact on Economy
+#### Impact on Economy
 There are 985 levels of EVTYPE. Since we are only interested in weather events 
-with the most impact on **fatalities** and **injuries**, we will consider only
-the top 10.
+with the most impact on **damages**, we will consider only the top 10 events.
 
 ```{r{}
 propDamages<-totalStormImpact[ order(-totalStormImpact[, 4]), ][1:10, ]
@@ -228,7 +213,7 @@ totalDamageChart <- ggplot(data = totalDamages,
   xlab("Weather Event") + 
   ggtitle("Top 10 Events by Total Damages")
 
-grid.arrange(propDamageChart, cropDamageChart, totalDamageChart, ncol=3)
+grid.arrange(propDamageChart, cropDamageChart, totalDamageChart, ncol=2, nrow=2)
 ```
 
 According to the graph above,  **flood** causes the highest financial 
