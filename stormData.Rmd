@@ -153,14 +153,14 @@ Plot the Top 10 events with highest **Fatalities** and **Injuries**
 ```{r}
 fatalitiesChart <- ggplot(data = fatalities, aes(y=totalFatalities, 
                                     x=reorder(EVTYPE, totalFatalities))) + 
-  geom_bar(stat="identity", fill="red") +coord_flip() + 
+  geom_bar(stat="identity", fill="red") + coord_flip() + 
   ylab("Fatalities") + 
   xlab("Weather Event") + 
   ggtitle("Top 10 Events by Total Fatalities")
 
 injuriesChart <- ggplot(data = injuries, aes(y=totalInjuries, 
                                   x=reorder(EVTYPE, totalInjuries))) + 
-  geom_bar(stat="identity", fill="blue")+ coord_flip() +
+  geom_bar(stat="identity", fill="blue") + coord_flip() +
   ylab("Injuries") +
   xlab("Weather Event") + 
   ggtitle("Top 10 Events by Total Injuries")
@@ -191,7 +191,7 @@ Plot the Top 10 events with highest **Property Damage** and **Crop Damage**
 propDamageChart <- ggplot(data = propDamages, 
                           aes(y=totalPropDamage/10^9, 
                               x=reorder(EVTYPE, totalPropDamage))) + 
-  geom_bar(stat="identity", fill="red")  + 
+  geom_bar(stat="identity", fill="red")  + coord_flip() +
   ylab("Property Damages (US$ Billions)") + 
   xlab("Weather Event") + 
   ggtitle("Top 10 Events by Property Damages")
@@ -199,7 +199,7 @@ propDamageChart <- ggplot(data = propDamages,
 cropDamageChart <- ggplot(data = cropDamages, 
                           aes(y=totalCropDamage/10^9, 
                               x=reorder(EVTYPE, totalCropDamage))) + 
-  geom_bar(stat="identity", fill="blue")  + 
+  geom_bar(stat="identity", fill="blue")  + coord_flip() +
   ylab("Crop Damages (US$ Billions)") + 
   xlab("Weather Event") + 
   ggtitle("Top 10 Events by Crop Damages")
@@ -207,7 +207,7 @@ cropDamageChart <- ggplot(data = cropDamages,
 totalDamageChart <- ggplot(data = totalDamages, 
                           aes(y=totalDamage/10^9, 
                               x=reorder(EVTYPE, totalDamage))) + 
-  geom_bar(stat="identity", fill="orange")  + 
+  geom_bar(stat="identity", fill="orange")  + coord_flip() +
   ylab("Total Damages (US$ Billions)") + 
   xlab("Weather Event") + 
   ggtitle("Top 10 Events by Total Damages")
