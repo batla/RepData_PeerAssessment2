@@ -27,7 +27,6 @@ Basically, we want to answer explore and answer two questions:
 
 ```{r}
 echo = TRUE
-#options(scipen = 1) 
 library(R.utils)
 library(ggplot2)
 library(plyr)
